@@ -1,19 +1,9 @@
-# Feature Specification: Chef Candidate Evaluation Platform
+ # Feature Specification: Chef Candidate Evaluation Platform
 
 **Feature Branch**: `001-chef-candidate-evaluation`
 **Created**: 2025-11-13
 **Status**: Draft
 **Input**: Build a password-protected web application to evaluate chef candidates for menu-development and test-kitchen roles.
-
-## Clarifications
-
-### Session 2025-11-13
-
-- Q: How should the system handle authentication security beyond basic password complexity? → A: Basic only: password complexity rules, email verification (current spec coverage)
-- Q: What are the permission differences between "Reviewer" and "Admin" roles mentioned in the AdminUser entity? → A: Merge into single role, admin. Admin will review
-- Q: Must candidates provide feedback (rating/comment) on ALL dishes in the menu, or can they skip dishes? → A: Optional: candidates can skip dishes; submission allowed with partial feedback
-- Q: When the transcription service fails or is unavailable, how should the system behave? → A: Graceful degradation: candidate proceeds; video stored; admin sees "transcription unavailable"; manual review possible
-- Q: What operational metrics and monitoring should the system provide for admins to ensure healthy operation? → A: None: rely on application logs only; no dashboard metrics
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -124,7 +114,6 @@ Admins can add, edit, and remove interview prompts that candidates see during th
 - How does the system prevent a candidate from viewing other candidates' submissions? (Role-based access control enforced at API level; candidates can only access their own data)
 - What happens when multiple admins are reviewing the same candidate simultaneously? (Read-only access for review; no conflicts since admins don't modify candidate data)
 - How does transcript generation handle video recordings with poor audio quality or multiple speakers? (Best-effort transcription with confidence scores; admins can flag low-quality transcripts for manual review)
-- What happens if the transcription service is completely unavailable or fails? (Graceful degradation: candidate can proceed and complete submission; video is stored; admin sees "transcription unavailable" status and can review video directly without transcript)
 - What happens when an admin removes an interview prompt that some candidates have already answered? (Historical responses preserved; prompt only removed from new candidate interviews)
 
 ## Requirements *(mandatory)*
@@ -163,7 +152,7 @@ Admins can add, edit, and remove interview prompts that candidates see during th
 - **FR-019**: Transcripts MUST be labeled with prompt text and candidate name (format: "[Prompt] - [Candidate Name].txt")
 - **FR-020**: System MUST make transcripts available for download by admins
 - **FR-021**: System MUST process transcription asynchronously (candidates and admins see "processing" state until ready)
-- **FR-022**: System MUST retain original video and allow candidate submission to proceed even if transcript generation fails; admin MUST see "transcription unavailable" status and have access to video for manual review
+- **FR-022**: System MUST retain original video if transcript generation fails
 
 **Menu Review & Feedback**
 
@@ -176,43 +165,42 @@ Admins can add, edit, and remove interview prompts that candidates see during th
 - **FR-029**: System MUST auto-save candidate feedback as they progress through menu review
 - **FR-030**: Candidates MUST be able to edit feedback before final submission
 - **FR-031**: System MUST validate image uploads for format (JPG, PNG, HEIC) and size
-- **FR-032**: System MUST allow candidates to submit menu feedback with partial dish coverage (candidates can skip dishes without providing ratings or comments)
 
 **Admin Candidate Review**
 
-- **FR-033**: Admins MUST be able to view list of all candidates with submission status
-- **FR-034**: Admins MUST be able to filter candidates by status (incomplete, pending review, reviewed, eliminated, hired)
-- **FR-035**: Admins MUST be able to view individual candidate detail page with all submission materials
-- **FR-036**: Candidate detail page MUST display uploaded resume and cover letter with download links
-- **FR-037**: Candidate detail page MUST display all video recordings with in-browser playback controls
-- **FR-038**: Candidate detail page MUST display downloadable transcripts for each video
-- **FR-039**: Candidate detail page MUST display complete menu feedback (ratings, comments, elimination votes, proposed dishes)
+- **FR-032**: Admins MUST be able to view list of all candidates with submission status
+- **FR-033**: Admins MUST be able to filter candidates by status (incomplete, pending review, reviewed, eliminated, hired)
+- **FR-034**: Admins MUST be able to view individual candidate detail page with all submission materials
+- **FR-035**: Candidate detail page MUST display uploaded resume and cover letter with download links
+- **FR-036**: Candidate detail page MUST display all video recordings with in-browser playback controls
+- **FR-037**: Candidate detail page MUST display downloadable transcripts for each video
+- **FR-038**: Candidate detail page MUST display complete menu feedback (ratings, comments, elimination votes, proposed dishes)
 
 **Admin Gallery & Table Views**
 
-- **FR-040**: Admins MUST be able to toggle between gallery view and table view for menu feedback analysis
-- **FR-041**: Gallery view MUST display dish photos in a grid layout with overlays showing candidate names, ratings, and feedback summary
-- **FR-042**: Table view MUST display sortable/filterable table with columns for dish name, category, average rating, comment count, elimination vote count, and proposed dish count
-- **FR-043**: System MUST preserve filters and sort state when toggling between gallery and table views
-- **FR-044**: Admins MUST be able to click on a dish in either view to see aggregated feedback from all candidates
-- **FR-045**: Dish detail view MUST display all candidate comments, ratings, elimination votes, and proposed dish photos
+- **FR-039**: Admins MUST be able to toggle between gallery view and table view for menu feedback analysis
+- **FR-040**: Gallery view MUST display dish photos in a grid layout with overlays showing candidate names, ratings, and feedback summary
+- **FR-041**: Table view MUST display sortable/filterable table with columns for dish name, category, average rating, comment count, elimination vote count, and proposed dish count
+- **FR-042**: System MUST preserve filters and sort state when toggling between gallery and table views
+- **FR-043**: Admins MUST be able to click on a dish in either view to see aggregated feedback from all candidates
+- **FR-044**: Dish detail view MUST display all candidate comments, ratings, elimination votes, and proposed dish photos
 
 **Admin Prompt Management**
 
-- **FR-046**: Admins MUST be able to view all current interview prompts in sequential order
-- **FR-047**: Admins MUST be able to add new interview prompts with question text and optional time limit
-- **FR-048**: Admins MUST be able to edit existing interview prompts
-- **FR-049**: Admins MUST be able to remove interview prompts
-- **FR-050**: Admins MUST be able to reorder interview prompts via drag-and-drop or up/down controls
-- **FR-051**: System MUST ensure candidates who have started interviews see the original prompts (no mid-interview changes)
-- **FR-052**: System MUST apply prompt changes only to new candidate interviews
+- **FR-045**: Admins MUST be able to view all current interview prompts in sequential order
+- **FR-046**: Admins MUST be able to add new interview prompts with question text and optional time limit
+- **FR-047**: Admins MUST be able to edit existing interview prompts
+- **FR-048**: Admins MUST be able to remove interview prompts
+- **FR-049**: Admins MUST be able to reorder interview prompts via drag-and-drop or up/down controls
+- **FR-050**: System MUST ensure candidates who have started interviews see the original prompts (no mid-interview changes)
+- **FR-051**: System MUST apply prompt changes only to new candidate interviews
 
 **Data Integrity & Audit**
 
-- **FR-053**: System MUST timestamp all candidate submissions (documents, videos, feedback)
-- **FR-054**: System MUST prevent candidates from deleting or editing submissions after final submission
-- **FR-055**: System MUST log all admin actions (view candidate, download transcript, update candidate status)
-- **FR-056**: System MUST retain candidate data for 90 days post-hiring decision (configurable)
+- **FR-052**: System MUST timestamp all candidate submissions (documents, videos, feedback)
+- **FR-053**: System MUST prevent candidates from deleting or editing submissions after final submission
+- **FR-054**: System MUST log all admin actions (view candidate, download transcript, update candidate status)
+- **FR-055**: System MUST retain candidate data for 90 days post-hiring decision (configurable)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -226,7 +214,7 @@ Admins can add, edit, and remove interview prompts that candidates see during th
 - **Dish**: Represents a menu item; attributes include menu category ID, dish name, description, photo URLs (array), active status
 - **Feedback**: Represents candidate's evaluation of a dish; attributes include candidate ID, dish ID, rating (1-5), comment text, elimination vote (boolean), timestamp
 - **ProposedDish**: Represents candidate's alternative dish proposal; attributes include feedback ID (foreign key), candidate ID, dish ID (dish being replaced), photo URLs (array), upload timestamp
-- **AdminUser**: Represents staff admin who reviews candidates and manages system; attributes include name, email, password (hashed), created timestamp
+- **AdminUser**: Represents staff reviewer/admin; attributes include name, email, role (reviewer, admin), hire date
 
 ## Success Criteria *(mandatory)*
 

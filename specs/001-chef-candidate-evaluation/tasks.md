@@ -78,27 +78,27 @@ Phase 1 (Setup) → Phase 2 (Foundational)
 
 ### Backend Setup
 
-- [ ] T001 Create backend/ directory structure per plan.md (src/models, src/services, src/api, src/lib, src/config, tests/)
-- [ ] T002 [P] Initialize Python project with pyproject.toml in backend/
-- [ ] T003 [P] Create requirements.txt with FastAPI, SQLAlchemy 2.0, asyncpg, Pydantic, ARQ, boto3, assemblyai, python-jose, passlib, pytest
-- [ ] T004 [P] Set up .env.example in backend/ with database URL, S3 credentials, JWT secret, AssemblyAI API key
-- [ ] T005 Create backend/src/config/settings.py for environment variable loading with Pydantic BaseSettings
-- [ ] T006 Create backend/src/config/database.py with async SQLAlchemy engine and session management
-- [ ] T007 Create backend/src/config/storage.py with S3 client configuration (boto3)
-- [ ] T008 [P] Create backend/src/main.py with FastAPI app initialization, CORS middleware, and health check endpoint
+- [X] T001 Create backend/ directory structure per plan.md (src/models, src/services, src/api, src/lib, src/config, tests/)
+- [X] T002 [P] Initialize Python project with pyproject.toml in backend/
+- [X] T003 [P] Create requirements.txt with FastAPI, SQLAlchemy 2.0, asyncpg, Pydantic, ARQ, boto3, assemblyai, python-jose, passlib, pytest
+- [X] T004 [P] Set up .env.example in backend/ with database URL, S3 credentials, JWT secret, AssemblyAI API key
+- [X] T005 Create backend/src/config/settings.py for environment variable loading with Pydantic BaseSettings
+- [X] T006 Create backend/src/config/database.py with async SQLAlchemy engine and session management
+- [X] T007 Create backend/src/config/storage.py with S3 client configuration (boto3)
+- [X] T008 [P] Create backend/src/main.py with FastAPI app initialization, CORS middleware, and health check endpoint
 
 ### Frontend Setup
 
-- [ ] T009 Create frontend/ directory structure per plan.md (src/components, src/pages, src/services, src/lib, src/assets, tests/)
-- [ ] T010 [P] Initialize Next.js 15 project with TypeScript in frontend/ (npx create-next-app@latest)
-- [ ] T011 [P] Install frontend dependencies: Tailwind CSS, shadcn/ui, react-media-recorder, @aws-sdk/client-s3, @aws-sdk/lib-storage
-- [ ] T012 [P] Configure Tailwind CSS with mobile-first breakpoints in frontend/tailwind.config.ts
-- [ ] T013 [P] Create frontend/.env.example with backend API URL and S3 bucket URL
-- [ ] T014 [P] Create frontend/src/lib/api-client.ts with Axios instance and JWT token interceptor
+- [X] T009 Create frontend/ directory structure per plan.md (src/components, src/pages, src/services, src/lib, src/assets, tests/)
+- [X] T010 [P] Initialize Next.js 15 project with TypeScript in frontend/ (npx create-next-app@latest)
+- [X] T011 [P] Install frontend dependencies: Tailwind CSS, shadcn/ui, react-media-recorder, @aws-sdk/client-s3, @aws-sdk/lib-storage
+- [X] T012 [P] Configure Tailwind CSS with mobile-first breakpoints in frontend/tailwind.config.ts
+- [X] T013 [P] Create frontend/.env.example with backend API URL and S3 bucket URL
+- [X] T014 [P] Create frontend/src/lib/api-client.ts with Axios instance and JWT token interceptor
 
 ### Development Infrastructure
 
-- [ ] T015 Create docker-compose.yml with PostgreSQL 15, Redis 7, and local S3 (MinIO) for development
+- [X] T015 Create docker-compose.yml with PostgreSQL 15, Redis 7, and local S3 (MinIO) for development
 
 ---
 
