@@ -21,12 +21,19 @@ class Settings(BaseSettings):
     # Redis Configuration
     redis_url: str = "redis://localhost:6379/0"
 
-    # AWS S3 Configuration
-    aws_access_key_id: str
-    aws_secret_access_key: str
+    # Storage Configuration
+    storage_type: str = "local"  # Options: local, s3, minio
+    storage_backend: str = "local"  # Backend type (same as storage_type)
+    storage_base_path: str = "/var/www/chef-candidate-media"  # For local storage
+    storage_base_url: str = "https://yourdomain.com/media"  # Public URL for media
+    storage_bucket_name: str = "local"  # Bucket name (local for filesystem, S3 bucket name for S3)
+
+    # S3/MinIO Configuration (optional, only needed if storage_type=s3 or minio)
+    aws_access_key_id: Optional[str] = None
+    aws_secret_access_key: Optional[str] = None
     aws_region: str = "us-east-1"
     s3_bucket_name: str = "chef-candidate-media"
-    s3_endpoint_url: Optional[str] = None  # For MinIO/local development
+    s3_endpoint_url: Optional[str] = None  # For MinIO
 
     # AssemblyAI Configuration
     assemblyai_api_key: str

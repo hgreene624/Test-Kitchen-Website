@@ -14,7 +14,7 @@ This platform enables:
 - FastAPI (Python 3.11+)
 - PostgreSQL 15+ with SQLAlchemy 2.0 (async)
 - Redis + ARQ for background jobs
-- AWS S3 for media storage
+- Local filesystem storage (VPS) or S3-compatible storage (optional)
 - AssemblyAI for video transcription
 
 ### Frontend
@@ -22,6 +22,12 @@ This platform enables:
 - Tailwind CSS + shadcn/ui
 - Axios for API communication
 - react-media-recorder for video capture
+
+### Deployment
+- Hostinger VPS with Ubuntu 22.04+
+- Nginx reverse proxy
+- Systemd services for process management
+- Let's Encrypt SSL certificates
 
 ## Quick Start
 
@@ -41,7 +47,7 @@ docker-compose up -d
 This starts:
 - PostgreSQL on port 5432
 - Redis on port 6379
-- MinIO (S3-compatible storage) on ports 9000 (API) and 9001 (Console)
+- Note: Media storage uses local filesystem (no MinIO needed)
 
 3. Set up backend:
 ```bash
@@ -68,7 +74,6 @@ npm run dev
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Docs: http://localhost:8000/api/docs
-- MinIO Console: http://localhost:9001 (minioadmin / minioadmin)
 
 ## Project Structure
 
@@ -187,20 +192,33 @@ When running in development mode:
 
 ### Backend (.env)
 ```bash
+# Database
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/chef_candidates
+
+# Redis
 REDIS_URL=redis://localhost:6379/0
-AWS_ACCESS_KEY_ID=minioadmin
-AWS_SECRET_ACCESS_KEY=minioadmin
-S3_BUCKET_NAME=chef-candidate-media
-S3_ENDPOINT_URL=http://localhost:9000
+
+# Storage (Local Filesystem)
+STORAGE_TYPE=local
+STORAGE_BASE_PATH=/var/www/chef-candidate-media
+STORAGE_BASE_URL=http://localhost:8000/media
+
+# AssemblyAI
 ASSEMBLYAI_API_KEY=your_key_here
+
+# JWT
 JWT_SECRET_KEY=your_secret_here
+JWT_ALGORITHM=HS256
+
+# Application
+DEBUG=true
+ALLOWED_ORIGINS=http://localhost:3000
 ```
 
 ### Frontend (.env.local)
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-NEXT_PUBLIC_S3_BUCKET_URL=http://localhost:9000/chef-candidate-media
+NEXT_PUBLIC_APP_NAME="Chef Candidate Evaluation Platform"
 ```
 
 ## Testing
@@ -220,9 +238,28 @@ npm run test:e2e       # E2E tests
 
 ## Deployment
 
-See [specs/001-chef-candidate-evaluation/quickstart.md](specs/001-chef-candidate-evaluation/quickstart.md) for detailed deployment instructions.
+### Production Deployment (Hostinger VPS)
 
-Target platform: Railway.app
+This application is designed for deployment on a Hostinger VPS with Ubuntu 22.04+.
+
+**Complete deployment guide**: See [DEPLOY_VPS.md](DEPLOY_VPS.md)
+
+**Quick deployment steps:**
+1. Set up VPS with Ubuntu 22.04+
+2. Install dependencies (Python 3.11, Node.js 20, PostgreSQL 15, Redis, Nginx)
+3. Upload application files via SFTP
+4. Configure environment variables
+5. Set up systemd services
+6. Configure Nginx reverse proxy
+7. Install SSL certificate with Let's Encrypt
+
+**Storage**: Uses local filesystem on VPS (`/var/www/chef-candidate-media/`)
+
+**Alternative storage options**:
+- Self-hosted MinIO on VPS (S3-compatible)
+- External S3-compatible service (Backblaze B2, Wasabi, DigitalOcean Spaces)
+
+See deployment guide for detailed instructions.
 
 ## Documentation
 

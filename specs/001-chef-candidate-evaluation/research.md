@@ -82,22 +82,28 @@
 
 ## 4. Blob Storage for Media
 
-**Decision**: AWS S3
+**Decision**: Local Filesystem on VPS
 
-**Rationale**: AWS S3 provides battle-tested resumable uploads via multipart upload API, encryption at rest (SSE-S3), signed URLs for time-limited access, and generous free tier (5GB, 20K GET/2K PUT for 12 months). At ~$15-20/month beyond free tier for 500-1000GB, it's cost-effective and prototype-friendly. Integration with AssemblyAI transcription is seamless (submit S3 presigned URL).
+**Rationale**: For Hostinger VPS deployment, local filesystem storage is the simplest and most cost-effective solution for MVP phase. No external service costs, no API rate limits, direct file access for serving media, and sufficient for expected scale (50-100 candidates, ~10-50GB storage). Files organized in dedicated storage directory with separate folders for media types. Can migrate to S3-compatible storage (MinIO, Backblaze B2) later if needed.
 
 **Alternatives Considered**:
+- **AWS S3**: Rejected; requires AWS account, external costs (~$15-20/month), additional complexity for VPS deployment
+- **Self-hosted MinIO on VPS**: Rejected for MVP; adds 2-4GB RAM overhead, additional service to maintain, unnecessary complexity for current scale
 - **Cloudinary**: Rejected due to 100MB video limit on free tier and $89/month Plus plan cost
-- **Google Cloud Storage**: Rejected; comparable pricing but less ecosystem familiarity if using AWS Transcribe or other AWS services
-- **Azure Blob Storage**: Rejected; per-4MB transaction costs for chunked uploads add complexity
-- **Local Filesystem**: Development only; no encryption, signed URLs, or scale
+- **Backblaze B2 / Wasabi**: Rejected for MVP; external costs ($5-6/TB/month), API complexity, can migrate later if scale demands
 
 **Implementation Notes**:
-- **SDK**: AWS SDK v3 for JavaScript (`@aws-sdk/client-s3`, `@aws-sdk/lib-storage`) or boto3 for Python
-- **Chunked Upload**: Use `Upload` class (JS) or multipart upload API (Python) with progress events
-- **Encryption**: Enable default SSE-S3 on bucket (no code changes required)
-- **Signed URLs**: Generate presigned URLs for uploads (1-hour expiration) and downloads (1-hour expiration) using `getSignedUrl`
-- **Best Practices**: Lifecycle policy to auto-delete incomplete uploads after 7 days; separate folders for videos/, documents/, photos/
+- **Storage Path**: `/var/www/chef-candidate-media/` on VPS with subdirectories: `videos/`, `documents/`, `photos/`
+- **File Organization**: Organize by type and candidate ID (e.g., `videos/{candidate_id}/{video_id}.mp4`)
+- **Permissions**: Nginx user must have read access; FastAPI process needs read/write access
+- **Chunked Upload**: Use FastAPI's `UploadFile` with streaming to disk; track progress in-memory or via Redis
+- **File Serving**: Nginx serves static files directly (fast) or FastAPI generates secure file paths with path validation
+- **Backup Strategy**: Regular rsync or tar backups to separate VPS volume or external backup service
+- **Security**:
+  - Files stored outside web root to prevent direct access
+  - FastAPI validates file access permissions (candidate can only access own files)
+  - Nginx location block for authenticated file serving
+- **Migration Path**: If scale requires, can switch to MinIO (install on VPS) or external S3-compatible service (Backblaze B2) with minimal code changes
 
 ---
 

@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from .config.settings import settings
 from .config.database import init_db, close_db
-from .config.storage import s3_client
+from .config.storage import storage
 
 
 @asynccontextmanager
@@ -16,9 +16,10 @@ async def lifespan(app: FastAPI):
     Args:
         app: FastAPI application instance
     """
-    # Startup: Initialize database and ensure S3 bucket exists
+    # Startup: Initialize database and storage
     await init_db()
-    await s3_client.ensure_bucket_exists()
+    # Note: Local filesystem storage creates directories on init
+    # S3/MinIO storage initialization happens when first used
     yield
     # Shutdown: Close database connections
     await close_db()
@@ -75,10 +76,14 @@ async def root():
     }
 
 
-# TODO: Register API routers
-# from .api.v1 import auth, candidates, admin, media, transcriptions
-# app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-# app.include_router(candidates.router, prefix="/api/v1/candidates", tags=["Candidates"])
+# Register API routers
+from .api.v1 import auth, candidates
+
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(candidates.router, prefix="/api/v1/candidates", tags=["Candidates"])
+
+# TODO: Register additional routers as they are implemented
+# from .api.v1 import admin, media, transcriptions
 # app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
 # app.include_router(media.router, prefix="/api/v1/media", tags=["Media"])
 # app.include_router(transcriptions.router, prefix="/api/v1/transcriptions", tags=["Transcriptions"])

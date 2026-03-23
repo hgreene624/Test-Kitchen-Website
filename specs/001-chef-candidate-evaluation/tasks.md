@@ -22,7 +22,7 @@ This task list provides a complete implementation roadmap for the Chef Candidate
 
 **Task Organization**: Tasks are grouped by user story (US1-US6) with clear priorities (P1, P2, P3). Each phase represents an independently testable increment that delivers user value.
 
-**Total Tasks**: 127 tasks across 8 phases
+**Total Tasks**: 129 tasks across 8 phases
 
 ---
 
@@ -31,7 +31,7 @@ This task list provides a complete implementation roadmap for the Chef Candidate
 | Phase | User Story | Priority | Task Count | Parallelizable |
 |-------|------------|----------|------------|----------------|
 | Phase 1 | Setup | - | 15 | 8 |
-| Phase 2 | Foundational | - | 18 | 12 |
+| Phase 2 | Foundational | - | 20 | 12 |
 | Phase 3 | US1: Account & Profile | P1 | 16 | 10 |
 | Phase 4 | US2: Video Interview | P1 | 22 | 14 |
 | Phase 5 | US3: Menu Review | P1 | 18 | 11 |
@@ -110,30 +110,35 @@ Phase 1 (Setup) → Phase 2 (Foundational)
 
 ### Database Models (All Entities)
 
-- [ ] T016 Create backend/src/models/base.py with Base SQLAlchemy declarative base and UUID primary key mixin
-- [ ] T017 [P] Create backend/src/models/candidate.py with Candidate entity (fields from data-model.md)
-- [ ] T018 [P] Create backend/src/models/document.py with Document entity
-- [ ] T019 [P] Create backend/src/models/interview_prompt.py with InterviewPrompt entity
-- [ ] T020 [P] Create backend/src/models/video_recording.py with VideoRecording entity
-- [ ] T021 [P] Create backend/src/models/transcript.py with Transcript entity
-- [ ] T022 [P] Create backend/src/models/menu.py with Menu entity
-- [ ] T023 [P] Create backend/src/models/menu_category.py with MenuCategory entity
-- [ ] T024 [P] Create backend/src/models/dish.py with Dish entity
-- [ ] T025 [P] Create backend/src/models/feedback.py with Feedback entity
-- [ ] T026 [P] Create backend/src/models/proposed_dish.py with ProposedDish entity
-- [ ] T027 [P] Create backend/src/models/admin_user.py with AdminUser entity
-- [ ] T028 [P] Create backend/src/models/audit_log.py with AuditLog entity
-- [ ] T029 Create Alembic migration script for initial database schema with all 12 entities and 47 indexes
+- [X] T016 Create backend/src/models/base.py with Base SQLAlchemy declarative base and UUID primary key mixin
+- [X] T017 [P] Create backend/src/models/candidate.py with Candidate entity (fields from data-model.md)
+- [X] T018 [P] Create backend/src/models/document.py with Document entity
+- [X] T019 [P] Create backend/src/models/interview_prompt.py with InterviewPrompt entity
+- [X] T020 [P] Create backend/src/models/video_recording.py with VideoRecording entity
+- [X] T021 [P] Create backend/src/models/transcript.py with Transcript entity
+- [X] T022 [P] Create backend/src/models/menu.py with Menu entity
+- [X] T023 [P] Create backend/src/models/menu_category.py with MenuCategory entity
+- [X] T024 [P] Create backend/src/models/dish.py with Dish entity
+- [X] T025 [P] Create backend/src/models/feedback.py with Feedback entity
+- [X] T026 [P] Create backend/src/models/proposed_dish.py with ProposedDish entity
+- [X] T027 [P] Create backend/src/models/admin_user.py with AdminUser entity
+- [X] T028 [P] Create backend/src/models/audit_log.py with AuditLog entity
+- [X] T029 Create Alembic migration script for initial database schema with all 12 entities and 77 indexes
+
+### Test Data Setup
+
+- [X] T029.1 Create backend/src/scripts/seed_test_data.py to add test candidate account (email: test@candidate.com, password: TestCandidate123!)
+- [X] T029.2 Create backend/src/scripts/seed_admin.py to add admin account (email: holden@flora-farms.com, password: Satellite123!)
 
 ### Authentication & Authorization
 
-- [ ] T030 Create backend/src/lib/auth.py with bcrypt password hashing, JWT token generation/validation, and role extraction
-- [ ] T031 Create backend/src/api/middleware/auth_middleware.py with JWT authentication dependency and role-based decorators (@require_candidate, @require_admin)
-- [ ] T032 Create backend/src/services/auth_service.py with signup, login, email verification logic
+- [X] T030 Create backend/src/lib/auth.py with bcrypt password hashing, JWT token generation/validation, and role extraction
+- [X] T031 Create backend/src/api/middleware/auth_middleware.py with JWT authentication dependency and role-based decorators (@require_candidate, @require_admin)
+- [X] T032 Create backend/src/services/auth_service.py with signup, login, email verification logic
 
 ### Storage & Media Utilities
 
-- [ ] T033 Create backend/src/lib/storage.py with S3 upload/download helpers, signed URL generation, and multipart upload support
+- [X] T033 Create backend/src/lib/storage.py with S3 upload/download helpers, signed URL generation, and multipart upload support
 
 ---
 
@@ -148,34 +153,34 @@ Phase 1 (Setup) → Phase 2 (Foundational)
 
 ### Backend API (Authentication)
 
-- [ ] T034 [P] [US1] Implement POST /auth/signup endpoint in backend/src/api/v1/auth.py (FR-001, FR-002, FR-003)
-- [ ] T035 [P] [US1] Implement POST /auth/verify-email endpoint in backend/src/api/v1/auth.py (FR-002)
-- [ ] T036 [P] [US1] Implement POST /auth/login endpoint in backend/src/api/v1/auth.py (FR-001, FR-004)
-- [ ] T037 [P] [US1] Implement POST /auth/logout endpoint in backend/src/api/v1/auth.py
-- [ ] T038 [P] [US1] Implement GET /auth/me endpoint in backend/src/api/v1/auth.py for current session
+- [X] T034 [P] [US1] Implement POST /auth/signup endpoint in backend/src/api/v1/auth.py (FR-001, FR-002, FR-003)
+- [X] T035 [P] [US1] Implement POST /auth/verify-email endpoint in backend/src/api/v1/auth.py (FR-002)
+- [X] T036 [P] [US1] Implement POST /auth/login endpoint in backend/src/api/v1/auth.py (FR-001, FR-004)
+- [X] T037 [P] [US1] Implement POST /auth/logout endpoint in backend/src/api/v1/auth.py
+- [X] T038 [P] [US1] Implement GET /auth/me endpoint in backend/src/api/v1/auth.py for current session
 
 ### Backend API (Document Upload)
 
-- [ ] T039 [P] [US1] Implement POST /candidates/{id}/documents endpoint in backend/src/api/v1/candidates.py for resume/cover letter upload (FR-007, FR-008, FR-010)
-- [ ] T040 [P] [US1] Implement GET /candidates/{id}/documents endpoint in backend/src/api/v1/candidates.py (FR-009)
-- [ ] T041 [P] [US1] Implement PUT /candidates/{id}/documents/{docId} endpoint in backend/src/api/v1/candidates.py for re-upload (FR-009)
+- [X] T039 [P] [US1] Implement POST /candidates/{id}/documents endpoint in backend/src/api/v1/candidates.py for resume/cover letter upload (FR-007, FR-008, FR-010)
+- [X] T040 [P] [US1] Implement GET /candidates/{id}/documents endpoint in backend/src/api/v1/candidates.py (FR-009)
+- [X] T041 [P] [US1] Implement PUT /candidates/{id}/documents/{docId} endpoint in backend/src/api/v1/candidates.py for re-upload (FR-009)
 
 ### Backend Services
 
-- [ ] T042 [US1] Create backend/src/services/document_service.py with document upload validation (file size, format), S3 storage, and re-upload logic
+- [X] T042 [US1] Create backend/src/services/document_service.py with document upload validation (file size, format), S3 storage, and re-upload logic
 
 ### Frontend Pages (Candidate)
 
-- [ ] T043 [P] [US1] Create frontend/src/pages/candidate/signup/page.tsx with signup form (email, password, name)
-- [ ] T044 [P] [US1] Create frontend/src/pages/candidate/verify-email/page.tsx with email verification confirmation page
-- [ ] T045 [P] [US1] Create frontend/src/pages/candidate/login/page.tsx with login form
-- [ ] T046 [P] [US1] Create frontend/src/pages/candidate/profile/page.tsx with document upload UI (resume, cover letter) and re-upload capability
+- [X] T043 [P] [US1] Create frontend/src/app/candidate/signup/page.tsx with signup form (email, password, name)
+- [X] T044 [P] [US1] Create frontend/src/app/candidate/verify-email/page.tsx with email verification confirmation page
+- [X] T045 [P] [US1] Create frontend/src/app/candidate/login/page.tsx with login form
+- [X] T046 [P] [US1] Create frontend/src/app/candidate/profile/page.tsx with document upload UI (resume, cover letter) and re-upload capability
 
 ### Frontend Components
 
-- [ ] T047 [P] [US1] Create frontend/src/components/DocumentUpload.tsx reusable component with drag-and-drop and progress bar
-- [ ] T048 [US1] Create frontend/src/services/auth-service.ts with signup, login, verify-email API calls
-- [ ] T049 [US1] Create frontend/src/services/document-service.ts with upload and re-upload API calls
+- [X] T047 [P] [US1] Create frontend/src/components/DocumentUpload.tsx reusable component with drag-and-drop and progress bar
+- [X] T048 [US1] Create frontend/src/services/auth-service.ts with signup, login, verify-email API calls
+- [X] T049 [US1] Create frontend/src/services/document-service.ts with upload and re-upload API calls
 
 ---
 
